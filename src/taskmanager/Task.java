@@ -11,9 +11,9 @@ import java.util.UUID;
  * incomplete until completionDate has a date
  */
 public class Task {
-    private UUID id;
+    private final UUID id;
     private String description;
-    private LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
     private LocalDateTime dueDate;
     private LocalDateTime completedDate;
 
@@ -72,10 +72,6 @@ public class Task {
     }
 
     //sets
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -86,7 +82,7 @@ public class Task {
 
     /**
      * Updates the task completion state.
-     *
+     * <p>
      * completing the task records the current date and time.
      * Marking it incomplete clears the completed data.
      *
