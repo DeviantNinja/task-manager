@@ -1,4 +1,6 @@
-package taskmanager;
+package taskmanager.repository;
+
+import taskmanager.model.Task;
 
 import java.util.List;
 
@@ -18,5 +20,5 @@ public interface TaskRepository {
     /**
      * Saves all tasks to underlying storage mechanism
      */
-    void saveTasks();
+    void saveTasks(List<Task> tasks);
 }
