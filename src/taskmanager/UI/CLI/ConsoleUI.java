@@ -3,6 +3,7 @@ package taskmanager.UI.CLI;
 import taskmanager.model.Task;
 import taskmanager.service.TaskManager;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,9 +12,14 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+/**
+ * CLI version of the user interface
+ * <p>
+ * User interface to create, manage and remove tasks
+ */
 public class ConsoleUI {
+    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm");
     private final TaskManager taskManager;
-    private final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm");
     private final Scanner scanner = new Scanner(System.in);
 
     public ConsoleUI(TaskManager taskManager) {
@@ -88,7 +94,12 @@ public class ConsoleUI {
         System.out.println("Task Created!\n");
 
     }
+
     private void deleteTask() {
+        if(taskManager.getTasks().isEmpty()) {
+            System.out.println("No Tasks Found!");
+            return;
+        }
         UUID taskId;
         System.out.println("Delete Task...");
         displayTasks();
@@ -97,7 +108,12 @@ public class ConsoleUI {
 
         System.out.println("Task Removed Successfully!\n");
     }
+
     private void markTaskComplete() {
+        if(taskManager.getTasks().isEmpty()) {
+            System.out.println("No Tasks Found!");
+            return;
+        }
         UUID taskId;
         System.out.println("Mark Task as Complete...");
         displayTasks();
@@ -106,7 +122,13 @@ public class ConsoleUI {
 
         System.out.println("Task Completed Successfully!\n");
     }
+
     private void reopenTask() {
+        if(taskManager.getTasks().isEmpty()) {
+            System.out.println("No Tasks Found!");
+            return;
+        }
+
         UUID taskId;
         System.out.println("Reopen Task...");
         displayTasks();
@@ -124,17 +146,24 @@ public class ConsoleUI {
         }
         return tasks.get(taskNumber - 1).getId();
     }
+
     private int getMenuChoice(int totalChoices) {
         while (true) {
-            System.out.print("Select option: ");
-            int choice = Integer.parseInt(scanner.nextLine());
+            try {
+                System.out.print("Select option: ");
+                int choice = Integer.parseInt(scanner.nextLine());
 
-            if (choice >= 1 && choice <= totalChoices) {
-                return choice;
+                if (choice >= 1 && choice <= totalChoices) {
+                    return choice;
+                }
+
+                System.out.println("Invalid Menu Entry!");
+            } catch (NumberFormatException e) {
+                System.out.println("Must be a Number!");
             }
-            System.out.println("Invalid option");
         }
     }
+
     private LocalDateTime dateTimeBuilder() {
         LocalDate date = buildDate();
 
@@ -154,26 +183,46 @@ public class ConsoleUI {
 
         return dateTime;
     }
+
     private LocalDate buildDate() {
         int year;
         int month;
         int day;
 
-        System.out.print("Enter Year: ");
-        year = Integer.parseInt(scanner.nextLine());
-        System.out.print("Enter Month: ");
-        month = Integer.parseInt(scanner.nextLine());
-        System.out.print("Enter Day: ");
-        day = Integer.parseInt(scanner.nextLine());
-        return LocalDate.of(year, month, day);
+        while (true) {
+            try {
+                System.out.print("Enter Year: ");
+                year = Integer.parseInt(scanner.nextLine());
+                System.out.print("Enter Month: ");
+                month = Integer.parseInt(scanner.nextLine());
+                System.out.print("Enter Day: ");
+                day = Integer.parseInt(scanner.nextLine());
+                return LocalDate.of(year, month, day);
+
+            } catch (NumberFormatException e) {
+                System.out.println("Must be a valid number!");
+            } catch (DateTimeException e) {
+                System.out.println("Invalid Date Format!");
+            }
+        }
     }
+
     private LocalTime buildTime() {
         int hour;
         int minute;
-        System.out.print("Enter Hour: ");
-        hour = Integer.parseInt(scanner.nextLine());
-        System.out.print("Enter Minute: ");
-        minute = Integer.parseInt(scanner.nextLine());
-        return LocalTime.of(hour, minute);
+        while (true) {
+            try {
+                System.out.print("Enter Hour: ");
+                hour = Integer.parseInt(scanner.nextLine());
+                System.out.print("Enter Minute: ");
+                minute = Integer.parseInt(scanner.nextLine());
+                return LocalTime.of(hour, minute);
+            }  catch (NumberFormatException e) {
+                System.out.println("Must be a valid number!");
+            } catch (DateTimeException e) {
+                System.out.println("Invalid Time Format!");
+            }
+        }
     }
+
 }
