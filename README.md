@@ -12,8 +12,8 @@ This project is being developed incrementally, starting as a simple CLI applicat
 - [x] List tasks
 - [x] Mark tasks complete
 - [x] Delete tasks
-- [ ] Save tasks to file
-- [ ] Load tasks from file
+- [x] Save tasks to file
+- [x] Load tasks from file
 
 ## Technologies
 
