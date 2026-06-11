@@ -19,8 +19,8 @@ public class TaskManager {
     private final List<Task> tasks;
     private final TaskRepository taskRepository;
 
-    public TaskManager() {
-        taskRepository = new MemoryTaskRepository();
+    public TaskManager(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
         tasks = taskRepository.getTasks();
     }
 
