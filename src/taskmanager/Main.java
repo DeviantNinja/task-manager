@@ -1,6 +1,8 @@
 package taskmanager;
 
 import taskmanager.UI.CLI.ConsoleUI;
+import taskmanager.repository.MemoryTaskRepository;
+import taskmanager.repository.TaskRepository;
 import taskmanager.service.TaskManager;
 
 /**
@@ -8,8 +10,8 @@ import taskmanager.service.TaskManager;
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Task Manager Started!");
-        TaskManager taskManager = new TaskManager();
+        TaskRepository repository = new MemoryTaskRepository();
+        TaskManager taskManager = new TaskManager(repository);
         ConsoleUI ui = new ConsoleUI(taskManager);
         ui.start();
 
