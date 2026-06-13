@@ -98,10 +98,38 @@ public class TaskManager {
         return true;
     }
 
+    /**
+     * Updates the task description for the provided taskID
+     * @param taskId the ID of the task to be updated
+     * @param taskDescription the amended task description
+     * @return returns true if the task is found and description is updated successfully, else false.
+     */
+    public boolean editTaskDescription(UUID taskId, String taskDescription) {
+        Task task = findTask(taskId);
+        if (task == null) {
+            return false;
+        }
+        task.setDescription(taskDescription);
+        return true;
+    }
+
+    /**
+     * Updates the task dueDate for the provided TaskID
+     * @param taskId the ID of the task to be updated
+     * @param taskDueDate the new due date for the task
+     * @return true if task ID can be matched to a task and dueDate is updated,  else false
+     */
+    public boolean editTaskDueDate(UUID taskId, LocalDateTime taskDueDate) {
+        Task task = findTask(taskId);
+        if (task == null) {
+            return false;
+        }
+        task.setDueDate(taskDueDate);
+        return true;
+    }
     private void saveTasks() {
         taskRepository.saveTasks(tasks);
     }
-
     private Task findTask(UUID taskId) {
         for (Task task : tasks) {
             if (task.getId().equals(taskId)) {
