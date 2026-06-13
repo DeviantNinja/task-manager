@@ -67,6 +67,7 @@ v3.0
 - Authentication
 - User-specific tasks
 - Basic roles/admin
+
 ## Technologies
 
 - Java
