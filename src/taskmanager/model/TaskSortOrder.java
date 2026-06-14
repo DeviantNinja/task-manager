@@ -5,5 +5,5 @@ public enum TaskSortOrder {
     DUE_DATE,
     DESCRIPTION,
     COMPLETION_DATE,
-    COMPLETION_ORDER
+    TASK_STATUS
 }
