@@ -4,7 +4,11 @@ import taskmanager.model.Task;
 import taskmanager.model.TaskSortOrder;
 import taskmanager.service.TaskManager;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -18,12 +22,10 @@ public class ConsoleUI2 {
     private final String MENU_QUESTION = "Select Choice: ";
     private TaskSortOrder defaultSortOrder;
 
-
     public ConsoleUI2(TaskManager taskManager, TaskSortOrder sortOrder) {
         this.taskManager = taskManager;
         this.defaultSortOrder = sortOrder;
     }
-
     public void start() {
         boolean running = true;
         while (running) {
@@ -32,41 +34,57 @@ public class ConsoleUI2 {
         }
     }
 
-    //Menu
-    private void displayMainMenu() {
-        System.out.println("Main Menu...");
-        System.out.println("1. View all tasks");
-        System.out.println("2. Create a Task");
-        System.out.println("3. Mark Task as Complete");
-        System.out.println("4. Mark Task as Incomplete");
-        System.out.println("5. Update Task");
-        System.out.println("6. Exit");
-        System.out.println();
-    }
 
-    private boolean handleMainMenuAction(int menuChoice) {
-        switch (menuChoice) {
-            case 1 -> viewTasks();
-            case 2 -> System.out.println("create a Task");
-            case 3 -> System.out.println("Mark Task as Complete");
-            case 4 -> System.out.println("Mark Task as Incomplete");
-            case 5 -> System.out.println("Update Task");
-            case 6 -> {
-                return false;
-            }
-            default -> System.out.println("Invalid option");
+    // main menu actions
+    private void viewTasks() {
+        boolean viewingTasks = true;
+        displayTasks(applySort(taskManager.getTasks()));
+        while (viewingTasks) {
+            displayViewTasksMenu();
+            viewingTasks = handleViewTasksMenu(getChoice(5, MENU_QUESTION));
         }
-        return true;
+
+    }
+    private void createTask() {
+        taskManager.createTask(captureDescription(), captureDateTime());
+    }
+    private void markTaskComplete(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            System.out.println("No Incomplete Tasks Found!");
+            return;
+        }
+        taskManager.markTaskComplete(selectTask(tasks).getId());
+    }
+    private void markTaskIncomplete(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            System.out.println("No Complete Tasks Found!");
+            return;
+        }
+        taskManager.reopenTask(selectTask(tasks).getId());
     }
 
+    //edit task menu actions
+    private void deleteTask(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            System.out.println("No Tasks Found!");
+            return;
+        }
+        taskManager.deleteTask(selectTask(tasks).getId());
+    }
+    private void sortOrderMenu() {
+        displaySortOrderMenu();
+        handleSortOrderMenu(getChoice(5, "Choose how Tasks should be Sorted: "));
+    }
 
+    //helper methods
     private int getChoice(int NoOfChoices, String choiceText) {
         while (true) {
             try {
                 System.out.print(choiceText);
                 int choice = Integer.parseInt(scanner.nextLine());
 
-                if (choice >= 1 || choice <= NoOfChoices) {
+                if (choice >= 1 && choice <= NoOfChoices) {
+                    System.out.println();
                     return choice;
                 }
             } catch (NumberFormatException e) {
@@ -74,57 +92,86 @@ public class ConsoleUI2 {
             }
         }
     }
-
-    //View Tasks
-
-    private void displayTasks(List<Task> tasks) {
-        int taskNumber = 1;
-        System.out.printf(
-                VIEW_TASK_FORMAT,
-                "No",
-                "Description",
-                "Due Date",
-                "status");
-        for (Task task : tasks) {
-            System.out.printf(
-                    VIEW_TASK_FORMAT,
-                    taskNumber++,
-                    task.getDescription(),
-                    task.getDueDate().format(DATE_TIME_FORMAT),
-                    task.isCompleted() ? task.getCompletedDate().format(DATE_TIME_FORMAT) : "Not Complete");
-        }
-        System.out.println();
+    private Task selectTask(List<Task> tasks) {
+        displayTasks(tasks);
+        return tasks.get(getChoice(tasks.size(), "Select Task: ") -1);
     }
 
-    private void viewTasks() {
-        boolean viewingTasks = true;
-        displayTasks(applySort(taskManager.getTasks()));
-        while (viewingTasks) {
-            viewTasksMenu();
-            viewingTasks = handleViewTasksMenu(getChoice(5, MENU_QUESTION));
-        }
+    private LocalDate captureDate() {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
+        while (true) {
+            System.out.print("Enter Date (dd/mm/yyyy): ");
+            String dateString = scanner.nextLine().trim();
+            
+            try {
+                LocalDate date = LocalDate.parse(dateString, dateFormat);
 
+                if (date.isBefore(LocalDate.now())) {
+                    System.out.println("Date cannot be in the past");
+                } else {
+                    return date;
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Date Format! Use dd/mm/yyyy!");
+            }
+        }
     }
 
-    private void viewTasksMenu() {
-        System.out.println("View Tasks Menu...");
-        System.out.println("1. View all tasks");
-        System.out.println("2. View Completed Tasks");
-        System.out.println("3. View Incomplete Tasks");
-        System.out.println("4. Change Sort Method");
-        System.out.println("5. Main Menu");
+    private LocalTime captureTime() {
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+
+        while (true) {
+            System.out.print("Enter 24 hour Time(hh:mm): ");
+            String timeString = scanner.nextLine().trim();
+            try {
+               return LocalTime.parse(timeString, timeFormat);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Time Format! Use hh:mm!");
+            }
+        }
     }
 
-    private boolean handleViewTasksMenu(int menuChoice) {
-        switch (menuChoice) {
-            case 1 -> displayTasks(applySort(taskManager.getTasks()));
-            case 2 -> displayTasks(applySort(getTasksByCompletion(true)));
-            case 3 -> displayTasks(applySort(getTasksByCompletion(false)));
-            case 4 -> System.out.println("Change Sort Method");
-            case 5 -> {return false;}
-            default -> System.out.println("Invalid Menu Entry!");
+
+    private LocalDateTime captureDateTime() {
+        LocalDate date = captureDate();
+        LocalTime time = captureTime();
+        while (true) {
+            LocalDateTime dateTime = LocalDateTime.of(date, time);
+
+            if(dateTime.isAfter(LocalDateTime.now())) {
+                return dateTime;
+            }
+            System.out.println("cannot be in the past");
+            time = captureTime();
         }
-        return true;
+    }
+
+    private String captureDescription() {
+        System.out.print("Enter Task Description: ");
+        return scanner.nextLine().trim();
+    }
+
+    private List<Task> applySort(List<Task> tasks) {
+        List<Task> sortedTasks = tasks;
+        switch (defaultSortOrder) {
+            case CREATION_DATE -> sortedTasks.sort(Comparator.comparing(Task::getCreationDate));
+            case DUE_DATE -> sortedTasks.sort(Comparator.comparing(Task::getDueDate));
+            case COMPLETION_DATE -> sortedTasks.sort(
+                    Comparator.comparing(
+                            Task::getCompletedDate,
+                            Comparator.nullsLast(Comparator.naturalOrder())
+                    ).thenComparing(Task::getDueDate)
+            );
+            case TASK_STATUS -> sortedTasks.sort(
+                    Comparator.comparing(
+                            Task::getCompletedDate,
+                            Comparator.nullsFirst(Comparator.naturalOrder())
+                    ).thenComparing(Task::getDueDate)
+            );
+            case DESCRIPTION -> sortedTasks.sort(Comparator.comparing(Task::getDescription));
+        }
+        return sortedTasks;
     }
 
     private List<Task> getTasksByCompletion(boolean isComplete) {
@@ -138,29 +185,89 @@ public class ConsoleUI2 {
         return filteredTasks;
     }
 
-    private List<Task> applySort(List<Task> tasks) {
-        List<Task> sortedTasks = tasks;
-        switch(defaultSortOrder) {
-            case CREATION_DATE -> sortedTasks.sort(Comparator.comparing(Task::getCreationDate));
-            case DUE_DATE -> sortedTasks.sort(Comparator.comparing(Task::getDueDate));
-            case COMPLETION_DATE -> sortedTasks.sort(
-                    Comparator.comparing(
-                        Task::getCompletedDate,
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                    ).thenComparing(Task::getDueDate)
-            );
-            case COMPLETION_ORDER -> sortedTasks.sort(
-                    Comparator.comparing(
-                        Task::getCompletedDate,
-                        Comparator.nullsFirst(Comparator.naturalOrder())
-                    ).thenComparing(Task::getDueDate)
-            );
-            case DESCRIPTION ->  sortedTasks.sort(Comparator.comparing(Task::getDescription));
+    private void displayTasks(List<Task> tasks) {
+        int taskNumber = 1;
+        System.out.printf(
+                VIEW_TASK_FORMAT,
+                "No",
+                "Description",
+                "Due Date",
+                "Completed");
+        for (Task task : tasks) {
+            System.out.printf(
+                    VIEW_TASK_FORMAT,
+                    taskNumber++,
+                    task.getDescription(),
+                    task.getDueDate().format(DATE_TIME_FORMAT),
+                    task.isCompleted() ? task.getCompletedDate().format(DATE_TIME_FORMAT) : "Not Complete");
         }
-        return sortedTasks;
+        System.out.println();
     }
 
-}
+    //Menu methods
+    private void displayMainMenu() {
+        System.out.println("Main Menu...");
+        System.out.println("1. View all tasks");
+        System.out.println("2. Create a Task");
+        System.out.println("3. Mark Task as Complete");
+        System.out.println("4. Mark Task as Incomplete");
+        System.out.println("5. Update Task");
+        System.out.println("6. Exit");
+        System.out.println();
+    }
+    private boolean handleMainMenuAction(int menuChoice) {
+        switch (menuChoice) {
+            case 1 -> viewTasks();
+            case 2 -> createTask();
+            case 3 -> markTaskComplete(getTasksByCompletion(false));
+            case 4 -> markTaskIncomplete(getTasksByCompletion(true));
+            case 5 -> System.out.println("Update Task");
+            case 6 -> {
+                return false;
+            }
+            default -> System.out.println("Invalid option");
+        }
+        return true;
+    }
+    private void displayViewTasksMenu() {
+        System.out.println("View Tasks Menu...");
+        System.out.println("1. View all tasks");
+        System.out.println("2. View Completed Tasks");
+        System.out.println("3. View Incomplete Tasks");
+        System.out.println("4. Change Sort Method");
+        System.out.println("5. Main Menu");
+    }
+    private boolean handleViewTasksMenu(int menuChoice) {
+        switch (menuChoice) {
+            case 1 -> displayTasks(applySort(taskManager.getTasks()));
+            case 2 -> displayTasks(applySort(getTasksByCompletion(true)));
+            case 3 -> displayTasks(applySort(getTasksByCompletion(false)));
+            case 4 -> sortOrderMenu();
+            case 5 -> {
+                return false;
+            }
+            default -> System.out.println("Invalid Menu Entry!");
+        }
+        return true;
+    }
+    private void displaySortOrderMenu() {
+        System.out.println("Sort Order Menu...");
+        System.out.println("1. Sort by Creation Date");
+        System.out.println("2. Sort by Due Date");
+        System.out.println("3. Sort by Description");
+        System.out.println("4. Sort by Completion Date");
+        System.out.println("5. Sort by Status");
+    }
+    private void handleSortOrderMenu(int menuChoice) {
+        switch (menuChoice) {
+            case 1 -> defaultSortOrder = TaskSortOrder.CREATION_DATE;
+            case 2 -> defaultSortOrder = TaskSortOrder.DUE_DATE;
+            case 3 -> defaultSortOrder = TaskSortOrder.DESCRIPTION;
+            case 4 -> defaultSortOrder = TaskSortOrder.COMPLETION_DATE;
+            case 5 -> defaultSortOrder = TaskSortOrder.TASK_STATUS;
+        }
+    }
+
 //    private void displayUpdateTaskMenu() {
 //        System.out.println("Update Task Menu...");
 //        System.out.println("1. Edit task description");
@@ -170,15 +277,20 @@ public class ConsoleUI2 {
 //        System.out.println("");
 //    }
 //
-//    private boolean taskMenuAction(int menuChoice) {
+//    private boolean handleTaskMenuAction(int menuChoice) {
 //        switch (menuChoice) {
-//            case 1 -> markTaskComplete();
-//            case 2 -> reopenTask();
-//            case 3 -> updateTaskDescription();
-//            case 4 -> updateTaskDueDate();
-//            case 5 -> deleteTask();
-//            case 6 -> {return false;}
+//            case 1 -> updateTaskDescription();
+//            case 2 -> updateTaskDueDate();
+//            case 3 -> deleteTask();
+//            case 4 -> {
+//                return false;
+//            }
 //            default -> System.out.println("Invalid option");
 //        }
 //        return true;
 //    }
+
+}
+
+//
+
