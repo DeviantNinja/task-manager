@@ -16,17 +16,17 @@ v1.0
 - [x] Load tasks from file
 
 v1.1
-- [ ] Edit Task
+- [] Edit Task
     - [ ] Edit Description
     - [ ] Edit Due Date
-- [ ] Add Task Sorting
-    - [ ] Sort by Due Date
-    - [ ] Sort by Creation Date
-- [ ] Add Task Filtering
-    - [ ] Show All Tasks
-    - [ ] Show Completed Tasks
-    - [ ] Show Active Tasks
-- [ ] Improve Input Validation
+- [x] Add Task Sorting
+    - [x] Sort by Due Date
+    - [x] Sort by Creation Date
+- [x] Add Task Filtering
+    - [x] Show All Tasks
+    - [x] Show Completed Tasks
+    - [x] Show Active Tasks
+- [x] Improve Input Validation
 
 v1.2
 - [ ] Convert Project to Maven
