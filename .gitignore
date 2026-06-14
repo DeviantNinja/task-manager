@@ -1,4 +1,6 @@
 .idea/
 out/
+Documentation/
 *.class
 *.iml
+Functions.md
