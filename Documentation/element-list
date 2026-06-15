@@ -1,0 +1,5 @@
+main.java.taskmanager
+main.java.taskmanager.model
+main.java.taskmanager.repository
+main.java.taskmanager.service
+main.java.taskmanager.UI.CLI
