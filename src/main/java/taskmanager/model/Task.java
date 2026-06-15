@@ -1,4 +1,4 @@
-package main.java.taskmanager.model;
+package taskmanager.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

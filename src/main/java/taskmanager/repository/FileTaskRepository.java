@@ -1,6 +1,6 @@
-package main.java.taskmanager.repository;
+package taskmanager.repository;
 
-import main.java.taskmanager.model.Task;
+import taskmanager.model.Task;
 
 import java.io.IOException;
 import java.nio.file.Files;

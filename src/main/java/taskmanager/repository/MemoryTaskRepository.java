@@ -1,6 +1,6 @@
-package main.java.taskmanager.repository;
+package taskmanager.repository;
 
-import main.java.taskmanager.model.Task;
+import taskmanager.model.Task;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
