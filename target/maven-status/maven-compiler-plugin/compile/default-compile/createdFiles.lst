@@ -1,0 +1,10 @@
+main\java\taskmanager\model\TaskSortOrder.class
+main\java\taskmanager\UI\CLI\ConsoleUI.class
+main\java\taskmanager\UI\CLI\ConsoleUI2.class
+main\java\taskmanager\Main.class
+main\java\taskmanager\repository\TaskRepository.class
+main\java\taskmanager\model\Task.class
+main\java\taskmanager\repository\MemoryTaskRepository.class
+main\java\taskmanager\service\TaskManager.class
+main\java\taskmanager\repository\FileTaskRepository.class
+main\java\taskmanager\UI\CLI\ConsoleUI2$1.class

@@ -1,7 +1,7 @@
-package taskmanager.UI.CLI;
+package main.java.taskmanager.UI.CLI;
 
-import taskmanager.model.Task;
-import taskmanager.service.TaskManager;
+import main.java.taskmanager.model.Task;
+import main.java.taskmanager.service.TaskManager;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;

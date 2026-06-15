@@ -1,8 +1,8 @@
-package taskmanager.UI.CLI;
+package main.java.taskmanager.UI.CLI;
 
-import taskmanager.model.Task;
-import taskmanager.model.TaskSortOrder;
-import taskmanager.service.TaskManager;
+import main.java.taskmanager.model.Task;
+import main.java.taskmanager.model.TaskSortOrder;
+import main.java.taskmanager.service.TaskManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,11 +1,10 @@
-package taskmanager;
+package main.java.taskmanager;
 
-import taskmanager.UI.CLI.ConsoleUI2;
-import taskmanager.model.TaskSortOrder;
-import taskmanager.repository.FileTaskRepository;
-import taskmanager.repository.MemoryTaskRepository;
-import taskmanager.repository.TaskRepository;
-import taskmanager.service.TaskManager;
+import main.java.taskmanager.UI.CLI.ConsoleUI2;
+import main.java.taskmanager.model.TaskSortOrder;
+import main.java.taskmanager.repository.FileTaskRepository;
+import main.java.taskmanager.repository.TaskRepository;
+import main.java.taskmanager.service.TaskManager;
 
 import java.nio.file.Paths;
 

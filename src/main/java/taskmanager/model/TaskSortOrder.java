@@ -1,4 +1,4 @@
-package taskmanager.model;
+package main.java.taskmanager.model;
 
 public enum TaskSortOrder {
     CREATION_DATE,
