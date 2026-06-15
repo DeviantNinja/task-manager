@@ -16,9 +16,9 @@ v1.0
 - [x] Load tasks from file
 
 v1.1
-- [] Edit Task
-    - [ ] Edit Description
-    - [ ] Edit Due Date
+- [x] Edit Task
+    - [x] Edit Description
+    - [x] Edit Due Date
 - [x] Add Task Sorting
     - [x] Sort by Due Date
     - [x] Sort by Creation Date
