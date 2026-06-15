@@ -30,17 +30,18 @@ public class ConsoleUI {
         boolean running = true;
 
         while (running) {
-            displayMenu();
+            mainMenu();
 
-            int choice = getMenuChoice(6);
+            int choice = getMenuChoice(7);
 
             switch (choice) {
                 case 1 -> displayTasks();
                 case 2 -> createTask();
-                case 3 -> markTaskComplete();
-                case 4 -> reopenTask();
-                case 5 -> deleteTask();
-                case 6 -> running = false;
+                case 3 -> updateTaskMenu();
+                case 4 -> markTaskComplete();
+                case 5 -> reopenTask();
+                case 6 -> deleteTask();
+                case 7 -> running = false;
                 default -> System.out.println("Invalid option");
             }
         }
@@ -48,14 +49,27 @@ public class ConsoleUI {
     }
 
     //menus
-    private void displayMenu() {
+    private void mainMenu() {
         System.out.println("1. View all tasks");
         System.out.println("2. Create Task");
-        System.out.println("3. Mark Task as Complete");
-        System.out.println("4. Reopen Task");
-        System.out.println("5. Delete Task");
-        System.out.println("6. Exit");
+        System.out.println("3. Update Task");
+        System.out.println("4. Mark Task as Complete");
+        System.out.println("5. Reopen Task");
+        System.out.println("6. Delete Task");
+        System.out.println("7. Exit");
     }
+    private void updateTaskMenu() {
+        if(taskManager.getTasks().isEmpty()) {
+            System.out.println("There are no tasks to update!");
+            start();
+        }
+
+        displayTasks();
+        System.out.println("Choose the task you want to update...");
+        getMenuChoice(taskManager.getTasks().size());
+    }
+
+
 
     //actions
     private void displayTasks() {
@@ -94,6 +108,11 @@ public class ConsoleUI {
         System.out.println("Task Created!\n");
 
     }
+
+    private void updateTask() {
+
+    }
+
 
     private void deleteTask() {
         if(taskManager.getTasks().isEmpty()) {

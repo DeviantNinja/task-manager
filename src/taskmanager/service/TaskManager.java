@@ -110,6 +110,7 @@ public class TaskManager {
             return false;
         }
         task.setDescription(taskDescription);
+        saveTasks();
         return true;
     }
 
@@ -125,8 +126,18 @@ public class TaskManager {
             return false;
         }
         task.setDueDate(taskDueDate);
+        saveTasks();
         return true;
     }
+
+    public boolean taskExists(UUID taskId) {
+        Task task = findTask(taskId);
+        if (task == null) {
+            return false;
+        }
+        return true;
+    }
+
     private void saveTasks() {
         taskRepository.saveTasks(tasks);
     }
