@@ -29,8 +29,9 @@ v1.1
 - [x] Improve Input Validation
 
 v1.2
-- [ ] Convert Project to Maven
-- [ ] Add JUnit 5
+- [x] Convert Project to Maven
+- [x] Add JUnit 
+- [x] Write Task Tests
 - [ ] Write TaskManager Tests
 - [ ] Write Repository Tests
 - [ ] Add Jackson
