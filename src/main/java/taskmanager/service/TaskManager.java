@@ -58,7 +58,7 @@ public class TaskManager {
             return false;
         }
 
-        task.setComplete(true);
+        task.complete();
         saveTasks();
         return true;
     }
@@ -75,7 +75,7 @@ public class TaskManager {
             return false;
         }
 
-        task.setComplete(false);
+        task.reopen();
         saveTasks();
         return true;
     }

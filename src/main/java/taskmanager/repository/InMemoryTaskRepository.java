@@ -9,10 +9,10 @@ import java.util.List;
  * Temporary in-memory  implmention of TaskRepository
  * Used during development before persistenceis implmented.
  */
-public class MemoryTaskRepository implements TaskRepository {
+public class InMemoryTaskRepository implements TaskRepository {
     private List<Task> tasks;
 
-    public MemoryTaskRepository() {
+    public InMemoryTaskRepository() {
         loadDemoTasks();
     }
 

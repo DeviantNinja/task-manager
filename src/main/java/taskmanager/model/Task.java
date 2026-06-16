@@ -1,5 +1,7 @@
 package taskmanager.model;
 
+import java.security.InvalidParameterException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,9 +13,10 @@ import java.util.UUID;
  * incomplete until completionDate has a date
  */
 public class Task {
+    public static final int MAX_DESCRIPTION_LENGTH = 100;
     private final UUID id;
-    private String description;
     private final LocalDateTime creationDate;
+    private String description;
     private LocalDateTime dueDate;
     private LocalDateTime completedDate;
 
@@ -35,11 +38,54 @@ public class Task {
      * @param completedDate the data and time the task was completed
      */
     public Task(UUID id, String description, LocalDateTime creationDate, LocalDateTime dueDate, LocalDateTime completedDate) {
+        if(id == null) {
+            throw new IllegalArgumentException("Task ID cannot be null");
+        }
+
+        if(creationDate == null) {
+            throw new IllegalArgumentException("Task Creation Date cannot be null");
+        }
+
         this.id = id;
-        this.description = description;
+        this.description = normaliseDescription(description);
         this.creationDate = creationDate;
-        this.dueDate = dueDate;
-        this.completedDate = completedDate;
+        this.dueDate = verifyAndReturnDueDate(dueDate, creationDate);
+        this.completedDate = verifyAndReturnCompletedDate(completedDate, creationDate);
+    }
+
+    private static String normaliseDescription(String description) {
+        if(description == null) {
+            throw new IllegalArgumentException("Description cannot be null");
+        }
+
+        String trimmedDescription = description.trim();
+
+        if(trimmedDescription.isBlank()) {
+            throw new IllegalArgumentException("Description cannot be blank");
+        }
+
+        if(trimmedDescription.length() > MAX_DESCRIPTION_LENGTH) {
+            throw new IllegalArgumentException("Description is too long");
+        }
+
+        return trimmedDescription;
+    }
+    private static LocalDateTime verifyAndReturnDueDate(LocalDateTime dueDate, LocalDateTime creationDate) {
+        if(dueDate == null) {
+            throw new IllegalArgumentException("Due date cannot be null");
+        }
+
+        if(dueDate.isBefore(creationDate)) {
+            throw new IllegalArgumentException("Due date cannot be before completed date");
+        }
+
+        return dueDate;
+    }
+    private static LocalDateTime verifyAndReturnCompletedDate(LocalDateTime completedDate, LocalDateTime creationDate) {
+        if(completedDate != null && completedDate.isBefore(creationDate)) {
+            throw new IllegalArgumentException("Completed date cannot be before completed date");
+        }
+        return completedDate;
     }
 
     //gets
@@ -73,27 +119,11 @@ public class Task {
 
     //sets
     public void setDescription(String description) {
-        this.description = description;
+        this.description = normaliseDescription(description);
     }
 
     public void setDueDate(LocalDateTime dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    /**
-     * Updates the task completion state.
-     * <p>
-     * completing the task records the current date and time.
-     * Marking it incomplete clears the completed data.
-     *
-     * @param complete true to mark the task complete, false to mark it as incomplete.
-     */
-    public void setComplete(boolean complete) {
-        if (complete) {
-            completedDate = LocalDateTime.now();
-        } else {
-            completedDate = null;
-        }
+        this.dueDate = verifyAndReturnDueDate(dueDate, creationDate);
     }
 
     @Override
@@ -103,5 +133,19 @@ public class Task {
                 "\nCreation Date: " + creationDate +
                 "\nDue Date: " + dueDate +
                 "\nCompleted Date: " + completedDate;
+    }
+
+    /**
+     * sets or changes current tasks complete date
+     */
+    public void complete() {
+        completedDate = LocalDateTime.now();
+    }
+
+    /**
+     * marks a task as incomplete by setting it to null
+     */
+    public void reopen() {
+        completedDate = null;
     }
 }
