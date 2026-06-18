@@ -32,7 +32,7 @@ v1.2
 - [x] Convert Project to Maven
 - [x] Add JUnit 
 - [x] Write Task Tests
-- [ ] Write TaskManager Tests
+- [x] Write TaskManager Tests
 - [ ] Write Repository Tests
 - [ ] Add Jackson
 - [ ] Convert Persistence from Text to JSON
