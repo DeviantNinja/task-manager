@@ -13,14 +13,19 @@ public class InMemoryTaskRepository implements TaskRepository {
     private List<Task> tasks;
 
     public InMemoryTaskRepository() {
-        loadDemoTasks();
+        tasks = new ArrayList<>();
+    }
+
+    public static InMemoryTaskRepository withDemoData() {
+        InMemoryTaskRepository repoWithDemoData = new InMemoryTaskRepository();
+        repoWithDemoData.loadDemoTasks();
+        return repoWithDemoData;
     }
 
     private void loadDemoTasks() {
-        tasks = new ArrayList<>();
-        tasks.add(new Task("Demo task 1", LocalDateTime.of(2026,6,15,14,30)));
-        tasks.add(new Task("Demo task 2", LocalDateTime.of(2026,6,20,9,30)));
-        tasks.add(new Task("Demo task 3", LocalDateTime.of(2026,7,20,9,30)));
+        tasks.add(new Task("Demo task 1", LocalDateTime.now().plusDays(1)));
+        tasks.add(new Task("Demo task 2", LocalDateTime.now().plusDays(2)));
+        tasks.add(new Task("Demo task 3", LocalDateTime.now().plusDays(3)));
     }
 
     @Override

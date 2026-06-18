@@ -49,8 +49,8 @@ public class Task {
         this.id = id;
         this.description = normaliseDescription(description);
         this.creationDate = creationDate;
-        this.dueDate = verifyAndReturnDueDate(dueDate, creationDate);
-        this.completedDate = verifyAndReturnCompletedDate(completedDate, creationDate);
+        this.dueDate = verifyAndReturnDueDate(dueDate, this.creationDate);
+        this.completedDate = verifyAndReturnCompletedDate(completedDate, this.creationDate);
     }
 
     private static String normaliseDescription(String description) {
@@ -76,7 +76,7 @@ public class Task {
         }
 
         if(dueDate.isBefore(creationDate)) {
-            throw new IllegalArgumentException("Due date cannot be before completed date");
+            throw new IllegalArgumentException("Due date cannot be before creation date");
         }
 
         return dueDate;
